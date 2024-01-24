@@ -1,0 +1,165 @@
+package methoddesign;
+import java.util.*;
+/**
+ *
+ * @author avirissimo2024
+ */
+public class MethodDesign {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        
+        Student f1,f2,f3;
+        f1 = new Student("Lucien","Strona","Calculus","Physics","Computer Science");
+        f2 = new Student("Preston","Morris","Calculus","Physics","Computer Science");
+        f3 = new Student("Brendan","Cordaro","Calculus","Physics","Computer Science");
+        
+        ArrayList<Student> f = new ArrayList<>();
+        f.add(f1);
+        f.add(f2);
+        f.add(f3);
+        
+        Test t1,t2,t3;
+        t1 = new Test(70.0,80.0,90.0,80.0);
+        t2 = new Test(60.0,75.0,75.0,70.0);
+        t3 = new Test(85.0,95.0,90.0,90.0);
+        
+        ArrayList<Test> t = new ArrayList<>();
+        t.add(t1);
+        t.add(t2);
+        t.add(t3);
+        
+        System.out.println("First Name: "+f1.getFirstName()+", Last Name: "+f1.getLastName()+
+                    " \nClass 1: "+f1.getCourse1()+", Integrals Test Grade: "+t1.getTestScore1()+
+                    "\nClass 2: "+f1.getCourse2()+", Circular Motion Test Grade: "+t1.getTestScore2()+
+                    "\nClass 3: "+f1.getCourse3()+", Unit 2 Test Grade: "+t1.getTestScore3()+
+                    "\nTest Average: "+t1.getAverage()+"\n");
+       
+        System.out.println("First Name: "+f2.getFirstName()+", Last Name: "+f2.getLastName()+
+                    " \nClass 1: "+f2.getCourse1()+", Integrals Test Grade: "+t2.getTestScore1()+
+                    "\nClass 2: "+f2.getCourse2()+", Circular Motion Test Grade: "+t2.getTestScore2()+
+                    "\nClass 3: "+f2.getCourse3()+", Unit 2 Test Grade: "+t2.getTestScore3()+
+                    "\nTest Average: "+t2.getAverage()+"\n");
+        
+        System.out.println("First Name: "+f3.getFirstName()+", Last Name: "+f3.getLastName()+
+                    " \nClass 1: "+f3.getCourse1()+", Integrals Test Grade: "+t3.getTestScore1()+
+                    "\nClass 2: "+f3.getCourse2()+", Circular Motion Test Grade: "+t3.getTestScore2()+
+                    "\nClass 3: "+f3.getCourse3()+", Unit 2 Test Grade: "+t3.getTestScore3()+
+                    "\nTest Average: "+t3.getAverage()+"\n");
+     
+    }
+    
+}
+
+class Student {
+    private String firstName, lastName;
+    private String course1, course2, course3;
+    
+    public Student()
+    {
+        firstName = "";
+        lastName = "";
+        course1 = "";
+        course2 = "";
+        course3 = "";
+    }
+    public Student(String first, String last, String c1, String c2, String c3)
+    {
+	this.firstName = first;
+	this.lastName = last;
+        course1 = c1;
+        course2 = c2;
+        course3 = c3;
+    }
+    
+    public String getFirstName(){
+        return firstName;
+    }
+    public void setFirstName(String firstName){
+        this.firstName = firstName;
+    }
+    
+    public String getLastName(){
+        return lastName;
+    }
+    public void setLastName(String lastName){
+        this.lastName = lastName;
+    }
+    
+    public String getCourse1(){
+        return course1;
+    }
+    public void setCourse1(String course1){
+        this.course1 = course1;
+    }
+    
+    public String getCourse2(){
+        return course2;
+    }
+    public void setCourse2(String course2){
+        this.course2 = course2;
+    }
+    
+    public String getCourse3(){
+        return course3;
+    }
+    public void setCourse3(String course3){
+        this.course3 = course3;
+    }
+    
+    @Override
+    public String toString()
+    {  
+	String result;
+	result = firstName + " " + lastName + "\n" + course1 +"\n"+ course2 +"\n"+ course3;
+	return result;
+    }
+}
+
+class Test{
+    private double Test1 = 0.0;
+    private double Test2 = 0.0;
+    private double Test3 = 0.0;
+    private double average = 0.0;
+    
+    public Test()
+    {
+        Test1 = 0.0;
+        Test2 = 0.0;
+        Test3 = 0.0;
+        average = 0.0;
+    }
+    public Test(Double Test1,Double Test2, Double Test3, Double average){
+        this.Test1 = Test1;    
+        this.Test2 = Test2;  
+        this.Test3 = Test3;  
+        this.average = average;  
+    }
+    
+    public double getTestScore1(){
+        return Test1;
+    }
+    public void setTestScore1(Double Test1){
+        this.Test1 = Test1;
+    }
+    
+    public double getTestScore2(){
+        return Test2;
+    }
+    public void setTestScore2(Double Test2){
+        this.Test2 = Test2;
+    }
+    
+    public double getTestScore3(){
+        return Test3;
+    }
+    public void setTestScore3(Double Test3){
+        this.Test3 = Test3;
+    }
+    
+    public double getAverage(){
+        return average;
+    }
+}
