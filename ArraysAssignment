@@ -1,0 +1,52 @@
+package arraysassignment;
+
+import java.util.*;
+
+/**
+ *
+ * @author avirissimo2024
+ */
+public class ArraysAssignment {
+
+    public static void main(String[] args) {
+        //intitial idea is initialize arrays using numbers, don't know how to make it work
+            //int allDays = 7;
+            //int weekDays = 5;
+        //create and initialize the array for all of the days
+        String[] daysInWeek = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+        //says what will be printed
+        System.out.println("The days in the week:");
+        //print the array, 1 day per line
+        for(String value : daysInWeek){
+            System.out.println(value + "");
+        }
+        
+        //says what will be printed
+        System.out.println("\nThe weekdays:");
+        //temporary array for resizing
+        String[] temp = new String[5];
+        //move values to temp
+        for(int i=0; i<temp.length; i++){
+            temp[i] = daysInWeek[i];
+        }
+        //temp = Arrays.copyOf(daysInWeek, 5);
+        //array resized here
+        daysInWeek = temp;
+        //print the new array, 1 day per line
+        for(String value : daysInWeek){
+            System.out.println(value + "");
+        }
+        //method with input to shuffle the array
+        shuffleArray(daysInWeek);
+        //print the shuffled array
+        System.out.println("\nThe weekdays shuffled:");
+        for(String value : daysInWeek){
+            System.out.println(value + "");
+        }
+    }
+    //method declared to shuffle an array
+    static void shuffleArray(String[] array){
+        Collections.shuffle(Arrays.asList(array));
+    }
+    
+}
