@@ -1,0 +1,71 @@
+package twodarray;
+
+import java.util.*;
+/**
+ *
+ * @author avirissimo2024
+ */
+public class TwoDArray {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        //shuffles the deck
+        String[][] deck = shuffle();
+        //deals the deck
+        String[][] hands = deal(deck);
+        //displays the hands in order
+        char player = 'A';
+        for (String[] hand : hands) {
+            System.out.print("Player " + player + "'s hand: ");
+            for (String card : hand) {
+                System.out.print(card + " ");
+            }
+            System.out.println();
+            player++;
+        }
+    }
+
+    public static String[][] shuffle() {
+        //creates 2d array
+        String[][] deck = new String[4][13];
+        //declares variables for array, suits and ranks
+        String[] suits = {"Spades", "Clubs", "Diamonds", "Hearts"};
+        String[] ranks = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+        //creates the deck
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 13; j++) {
+                deck[i][j] = ranks[j] + " of " + suits[i] + ",";
+            }
+        }
+        //shuffles the deck
+        List<String> allCards = new ArrayList<>();
+        for (String[] suit : deck) {
+            for (String card : suit) {
+                allCards.add(card);
+            }
+        }
+        //uses collections to shuffle
+        Collections.shuffle(allCards);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 13; j++) {
+                deck[i][j] = allCards.get(i * 13 + j);
+            }
+        }
+
+        return deck;
+    }
+
+    //deals the hands
+    public static String[][] deal(String[][] deck) {
+        String[][] hands = new String[4][5];
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 4; j++) {
+                hands[j][i] = deck[j][i];
+            }
+        }
+        //returns the hands for each player
+        return hands;
+    }
+}
