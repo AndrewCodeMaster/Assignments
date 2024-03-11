@@ -1,0 +1,639 @@
+package classinheritance;
+
+/**
+ *
+ * @author Andrew Virissimo
+ */
+public class ClassInheritance {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        //information for all of the vehicles and them printed
+        FourWD fwd = new FourWD("Jeep", 70.0, 4, 600.0, 18.0);
+        System.out.println(fwd);
+
+        Electric e = new Electric("Tesla", 80.0, 4, 500.0, 250.0);
+        System.out.println(e);
+
+        Bass b = new Bass("Bass Boat", 30.0, 2, 300.0, 10.0);
+        System.out.println(b);
+
+        Cruise c = new Cruise("Cruise Ship", 25.0, 2000, 50000.0, 0.5, 100);
+        System.out.println(c);
+
+        Military m = new Military("Stealth Bomber", 600.0, 2, 2000.0, 0.1);
+        System.out.println(m);
+
+        Water w = new Water("Seaplane", 50.0, 4, 1000.0, 15.0);
+        System.out.println(w);
+
+        AdvancedTank t2 = new AdvancedTank("Wormhole Tank", 35.0, 3, 1800.0, 0.8);
+        t2.setAmmo(40);
+        t2.setTracks(true);
+        t2.setWormholeGenerator(true);
+        System.out.println(t2);
+
+        StealthTank t3 = new StealthTank("Invisible Tank", 45.0, 5, 2200.0, 1.2);
+        t3.setAmmo(60);
+        t3.setTracks(true);
+        t3.setInvisibleMode(true);
+        System.out.println(t3);
+    }
+    
+}
+
+// The Speedometer interface to show the speed of any vehicle in the same way
+interface Speedometer {
+    void setSpeed(double inSpeed);
+    double getSpeed();
+}
+
+// The Base Vehicle Class, implements the Speedometer interface
+class Vehicle implements Speedometer {
+    protected String brandName;
+    protected double speed;
+    protected int passengers;
+    protected double cargoWeight;
+
+    public Vehicle(String inBrand, double inSpeed, int inPassengers, double inCargo) {
+        brandName = inBrand;
+        speed = inSpeed;
+        passengers = inPassengers;
+        cargoWeight = inCargo;
+    }
+
+    @Override
+    public void setSpeed(double inSpeed) {
+        speed = inSpeed;
+    }
+
+    @Override
+    public double getSpeed() {
+        return speed;
+    }
+
+    @Override
+    public String toString() {
+        return "Vehicle: " + getBrand() + "\n" +
+                "Speed (mph): " + getSpeed() + "\n" +
+                "Passengers: " + getPassengers() + "\n" +
+                "Cargo (lbs): " + getCargoWeight() + "\n";
+    }
+
+    public String getBrand() {
+        return brandName;
+    }
+
+    public int getPassengers() {
+        return passengers;
+    }
+
+    public double getCargoWeight() {
+        return cargoWeight;
+    }
+}
+//car is extended from vehicle with the base characteristics
+class Car extends Vehicle {
+    int wheels = 4;
+    String color = "White";
+    boolean spoiler = false;
+    boolean stereo = false;
+    double mpg = 0.0;
+
+    public Car(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG) {
+        super(inBrand, inSpeed, inPassengers, inCargo);
+        mpg = inMPG;
+        wheels = 4;
+    }
+
+    public void setSpoiler(boolean inSpoiler) {
+        spoiler = inSpoiler;
+    }
+
+    public boolean getSpoiler() {
+        return spoiler;
+    }
+
+    public void setStereo(boolean inStereo) {
+        stereo = inStereo;
+    }
+
+    public boolean getStereo() {
+        return stereo;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (spoiler)
+            return super.getSpeed() + 20;
+        else
+            return super.getSpeed();
+    }
+
+    public void setMpg(double mpg) {
+        this.mpg = mpg;
+    }
+
+    public double getMPG() {
+        if (stereo)
+            return mpg - (mpg / 10);
+        else
+            return mpg;
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n";
+        return result;
+    }
+}
+//four wheel drive class for a car that has four wheel drive as a feature
+class FourWD extends Car {
+    boolean FWD = true;
+
+    public FourWD(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG) {
+        super(inBrand, inSpeed, inPassengers, inCargo, inMPG);
+    }
+
+    public void setFWD(boolean inFWD) {
+        FWD = inFWD;
+    }
+
+    public boolean getFWD() {
+        return FWD;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (spoiler)
+            return super.getSpeed() + 20;
+        else
+            return super.getSpeed();
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n" +
+                "Four-Wheel Drive: " + (FWD ? "Yes" : "No") + "\n"; // Include Four-Wheel Drive information
+        return result;
+    }
+}
+//electric class for an electric car with mpc instead of mpg
+class Electric extends Car {
+    boolean electricity = true;
+    double mpc = 0.0;
+
+    public Electric(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPC) {
+        super(inBrand, inSpeed, inPassengers, inCargo, 0.0);  // Set mpg explicitly to 0.0
+        mpc = inMPC;
+    }
+
+    public void setElectricity(boolean inElectricity) {
+        electricity = inElectricity;
+    }
+
+    public boolean getElectricity() {
+        return electricity;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (electricity)
+            return super.getSpeed() + 20;
+        else
+            return super.getSpeed();
+    }
+
+    public void setMPC(double mpc) {
+        this.mpc = mpc;
+    }
+
+    public double getMPC() {
+        if (electricity)
+            return mpc - (mpc / 10);
+        else
+            return mpc;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "MPC: " + this.getMPC() + "\n"; // Include MPC for Electric
+    }
+}
+//base boat class
+class Boat extends Vehicle {
+    int length = 0;
+    String color = "White";
+    int weight = 0;
+    boolean inside = false;
+    double mpg = 0.0;
+
+    public Boat(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG) {
+        super(inBrand, inSpeed, inPassengers, inCargo);
+        mpg = inMPG;
+    }
+
+    public void setLength(int inLength) {
+        length = inLength;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setWeight(int inWeight) {
+        weight = inWeight;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setInside(boolean inInside) {
+        inside = inInside;
+    }
+
+    public boolean getInside() {
+        return inside;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (inside)
+            return super.getSpeed() - 20;
+        else
+            return super.getSpeed();
+    }
+
+    public void setMpg(double mpg) {
+        this.mpg = mpg;
+    }
+
+    public double getMPG() {
+        if (inside)
+            return mpg - (mpg / 10);
+        else
+            return mpg;
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n";
+        return result;
+    }
+}
+//bass boat class that has a trolling motor
+class Bass extends Boat {
+    boolean troll = true;
+
+    public Bass(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG) {
+        super(inBrand, inSpeed, inPassengers, inCargo, inMPG);
+    }
+
+    public void setTroll(boolean inTroll) {
+        troll = inTroll;
+    }
+
+    public boolean getTroll() {
+        return troll;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (inside)
+            return super.getSpeed() - 20;
+        else
+            return super.getSpeed();
+    }
+
+    public void setMpg(double mpg) {
+        this.mpg = mpg;
+    }
+
+    public double getMPG() {
+        if (inside)
+            return mpg - (mpg / 10);
+        else
+            return mpg;
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n" +
+                "Trolling Motor: " + (troll ? "Yes" : "No") + "\n"; // Include trolling motor information
+        return result;
+    }
+}
+//cruise ship class that has rooms as its special feature
+class Cruise extends Boat {
+    boolean inside = true;
+    int rooms = 0;
+
+    public Cruise(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG, int inRooms) {
+        super(inBrand, inSpeed, inPassengers, inCargo, inMPG);
+        rooms = inRooms;
+    }
+
+    public void setRooms(int inRooms) {
+        rooms = inRooms;
+    }
+
+    public int getRooms() {
+        return rooms;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (inside)
+            return super.getSpeed() - 20;
+        else
+            return super.getSpeed();
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n" +
+                "Rooms: " + rooms + "\n"; // Include rooms information
+        return result;
+    }
+}
+//base airplance class
+class Airplane extends Vehicle {
+    int wings = 2;
+    String color = "White";
+    int length = 0;
+    double mpg = 0.0;
+
+    public Airplane(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG) {
+        super(inBrand, inSpeed, inPassengers, inCargo);  // Pass inPassengers to the super constructor
+        mpg = inMPG;
+    }
+
+    public void setLength(int inLength) {
+        length = inLength;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (length > 100)
+            return super.getSpeed() - 20;
+        else
+            return super.getSpeed();
+    }
+
+    public void setMpg(double mpg) {
+        this.mpg = mpg;
+    }
+
+    public double getMPG() {
+        if (length > 100)
+            return mpg - (mpg / 10);
+        else
+            return mpg;
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n";
+        return result;
+    }
+}
+
+//military plane class that has weapons as its special feature
+class Military extends Airplane {
+    boolean weapons = true;
+
+    public Military(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG) {
+        super(inBrand, inSpeed, inPassengers, inCargo, inMPG);
+    }
+
+    public void setWeapons(boolean inWeapons) {
+        weapons = inWeapons;
+    }
+
+    public boolean getWeapons() {
+        return weapons;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (length > 100)
+            return super.getSpeed() - 20;
+        else
+            return super.getSpeed();
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n" +
+                "Weapons: " + (weapons ? "Yes" : "No") + "\n"; // Include weapons information for Military
+        return result;
+    }
+}
+
+//seaplane class that has landing in water as its special feature
+class Water extends Airplane {
+    boolean landWater = true;
+
+    public Water(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG) {
+        super(inBrand, inSpeed, inPassengers, inCargo, inMPG);
+    }
+
+    public void setLandWater(boolean inLandWater) {
+        landWater = inLandWater;
+    }
+
+    public boolean getLandWater() {
+        return landWater;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (length > 100)
+            return super.getSpeed() - 20;
+        else
+            return super.getSpeed();
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n" +
+                "Land/Water: " + (landWater ? "Yes" : "No") + "\n"; // Include land/water information for Water
+        return result;
+    }
+}
+
+//base tank class
+class Tank extends Vehicle {
+    boolean tracks = true;
+    String color = "White";
+    boolean missile = true;
+    boolean armor = true;
+    double mpg = 0.0;
+    int ammo = 0;
+
+    public Tank(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG) {
+        super(inBrand, inSpeed, inPassengers, inCargo);
+        mpg = inMPG;
+    }
+
+    public void setTracks(boolean inTracks) {
+        tracks = inTracks;
+    }
+
+    public boolean getTracks() {
+        return tracks;
+    }
+
+    public void setMissile(boolean inMissile) {
+        missile = inMissile;
+    }
+
+    public boolean getMissile() {
+        return missile;
+    }
+
+    public void setArmor(boolean inArmor) {
+        armor = inArmor;
+    }
+
+    public boolean getArmor() {
+        return armor;
+    }
+
+    public void setAmmo(int inAmmo) {
+        ammo = inAmmo;
+    }
+
+    public int getAmmo() {
+        return ammo;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (armor)
+            return super.getSpeed() - 20;
+        else
+            return super.getSpeed();
+    }
+
+    public void setMpg(double mpg) {
+        this.mpg = mpg;
+    }
+
+    public double getMPG() {
+        if (armor)
+            return mpg - (mpg / 10);
+        else
+            return mpg;
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n";
+        return result;
+    }
+}
+
+//special tank class 1, that has a wormhole generator to teleport
+class AdvancedTank extends Tank {
+    boolean wormholeGenerator = true;
+
+    public AdvancedTank(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG) {
+        super(inBrand, inSpeed, inPassengers, inCargo, inMPG);
+    }
+
+    public void setWormholeGenerator(boolean inWormholeGenerator) {
+        wormholeGenerator = inWormholeGenerator;
+    }
+
+    public boolean getWormholeGenerator() {
+        return wormholeGenerator;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (armor)
+            return super.getSpeed();
+        else
+            return super.getSpeed();
+    }
+
+    public void setMpg(double mpg) {
+        this.mpg = mpg;
+    }
+
+    public double getMPG() {
+        if (armor)
+            return mpg - (mpg / 10);
+        else
+            return mpg;
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n" +
+                "Wormhole Generator: " + (wormholeGenerator ? "Yes" : "No") + "\n"; // Include wormhole generator information
+        return result;
+    }
+}
+//special tank class 2, that has an invisible mode
+class StealthTank extends Tank {
+    boolean invisibleMode = true;
+
+    public StealthTank(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG) {
+        super(inBrand, inSpeed, inPassengers, inCargo, inMPG);
+    }
+
+    public void setInvisibleMode(boolean inInvisibleMode) {
+        invisibleMode = inInvisibleMode;
+    }
+
+    public boolean getInvisibleMode() {
+        return invisibleMode;
+    }
+
+    @Override
+    public double getSpeed() {
+        if (armor)
+            return super.getSpeed();
+        else
+            return super.getSpeed();
+    }
+
+    public void setMpg(double mpg) {
+        this.mpg = mpg;
+    }
+
+    public double getMPG() {
+        if (armor)
+            return mpg - (mpg / 10);
+        else
+            return mpg;
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString() +
+                "MPG: " + this.getMPG() + "\n" +
+                "Invisible Mode: " + (invisibleMode ? "Yes" : "No") + "\n"; // Include invisible mode information
+        return result;
+    }
+}
