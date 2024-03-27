@@ -1,0 +1,166 @@
+//game made by Andrew and Preston
+package game;
+
+import java.util.*;
+
+public class Game {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        //creates spartan, users character
+        Spartan player = new Spartan("Player Spartan", 100, 15, 40);
+        //initializes the number of enemies defeated to zero
+        int enemyCount = 0;
+        //introduces the game
+        introduceGame();
+        //creates the enemy and runs the game
+        while (player.isAlive()) {
+        Warrior enemy = createEnemy(++enemyCount);
+        System.out.println("\nYou have encountered an enemy warrior! Fight until you can't anymore!");
+        //says the health and energy and prompts user to choose an action
+        while (player.isAlive() && enemy.isAlive()) {
+            System.out.println("\nYour Health: " + player.health + ", Energy: " + player.energy);
+            System.out.println("Enemy's Health: " + enemy.health);
+            System.out.println("Choose your action:\n1. Attack\n2. Regenerate Energy");
+            System.out.print("Enter choice (1-2): ");
+            String choice = scanner.next();
+            //choice to attack or regenerate energy, an invalid choice loses the turn
+            switch (choice) {
+                case "1":
+                player.attack(enemy);
+                break;
+                case "2":
+                player.regenerateEnergy();
+                break;
+                default:
+                System.out.println("Invalid choice. You lose your turn.");
+                break;
+            }
+            //this is if the enemy is alive
+            if (enemy.isAlive()) {
+                enemy.attack(player);
+            }
+            //this is if player is dead, the game ends
+            if (!player.isAlive()) {
+                System.out.println("You have been defeated.");
+                break;
+            //this is if the player is alive and defeated the enemy
+            } else if (!enemy.isAlive()) {
+                System.out.println("You have defeated the enemy!");
+
+                performUpgrade(player, scanner);
+                break;
+            }
+        }
+    }
+    scanner.close();
+}
+//explains the game and how it works
+private static void introduceGame() {
+    System.out.println("Welcome to the Spartan vs. Warrior Arena! \n You are a Spartan. Your objective is to defeat as many warriors as you can.\n"
+        + "After defeating a warrior, you'll have the opportunity to upgrade your abilities. \n Be careful, though! Each warrior you face will be stronger than the last."
+        + "Good luck, and may your attacks be powerful! \n");
+}
+
+private static Warrior createEnemy(int enemyCount) {
+    //enemies gain mroe health over time
+    int health = 100 + enemyCount * 20;
+    //enemies get stronger over time
+    int strength = 10 + enemyCount * 3;
+    return new Warrior("Enemy Warrior " + enemyCount, health, strength);
+}
+//this is for upgrading the spartan after every win, if the user types an invalid choice, they lose their turn.
+private static void performUpgrade(Spartan player, Scanner scanner) {
+    System.out.println("\nCongratulations! You have leveled up and gained new abilities. You also regenerate health and energy.");
+    player.health = player.health + 100;
+    player.energy = player.energy + 40;
+    System.out.println("Choose an upgrade:");
+    System.out.println("1. Increase health (+20)");
+    System.out.println("2. Increase strength (+5)");
+    System.out.println("3. Increase energy (+20)");
+    System.out.print("Enter choice (1-3): ");
+    String choice = scanner.next();
+    switch (choice) {
+        case "1":
+        player.health += 20;
+        break;
+        case "2":
+        player.strength += 5;
+        break;
+        case "3":
+        player.energy += 20; 
+        break;
+        default:
+        System.out.println("Invalid choice. No upgrade performed.");
+        break;
+    }
+    System.out.println("Upgrade completed.");
+}
+}
+//character class that other characters will come from
+class Character {
+    protected String name;
+    protected int health;
+    protected int strength;
+    protected Random random = new Random();
+    //character constructor
+    public Character(String name, int health, int strength) {
+        this.name = name;
+        this.health = health;
+        this.strength = strength;
+    }
+
+    public void attack(Character target) {
+        //random damage for attacks
+        int damage = this.strength + random.nextInt(5);
+        target.health -= damage;
+        System.out.println(this.name + " attacks " + target.name + " for " + damage + " damage.");
+    }
+    //determines if character is still alive
+    public boolean isAlive() {
+        return this.health > 0;
+    }
+}
+//warrior is enemy and extends from character class
+class Warrior extends Character {
+    //uses super constructor
+    public Warrior(String name, int health, int strength) {
+        super(name, health, strength);
+    }
+
+    @Override
+    public void attack(Character target) {
+        //random damage for attacks
+        int damage = this.strength + 5 + random.nextInt(5);
+        target.health -= damage;
+        System.out.println(this.name + " (Warrior) deals " + damage + " damage to " + target.name + ".");
+    }
+}
+//spartan inherits from character and adds energy
+class Spartan extends Character {
+    int energy;
+    //uses super constructor
+    public Spartan(String name, int health, int strength, int energy) {
+        super(name, health, strength);
+        this.energy = energy;
+    }
+    //for attacking during turn
+    @Override
+    public void attack(Character target) {
+        if (this.energy >= 10) {
+            //random damage for attacks
+            int damage = this.strength * 2 + random.nextInt(10);
+            target.health -= damage;
+            this.energy -= 10;
+            System.out.println(this.name + " (Spartan) lands a powerful blow on " + target.name + " for " + damage + " damage.");
+        } else {
+            super.attack(target);
+            System.out.println(this.name + " (Spartan) has not enough energy, performing a weak attack.");
+        }
+    }
+    //to regenerate energy for spartan
+    public void regenerateEnergy() {
+        this.energy += 20;
+        System.out.println(this.name + " regenerates 20 energy. Current energy: " + this.energy);
+    }
+}
