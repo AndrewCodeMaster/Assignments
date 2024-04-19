@@ -1,0 +1,45 @@
+package pascaltriangle;
+
+import java.util.*;
+/**
+ *
+ * @author avirissimo2024
+ */
+public class PascalTriangle {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        //prompts user to enter a value for the line they want
+        System.out.println("What number line of Pascal's triangle do you want to see:");
+        //scanner to get the number of which line you want to print
+        int n = scan.nextInt();
+        n = n-1;
+        //calls the method to generate the line
+        int[] line = makeTriangle(n);
+        System.out.println(Arrays.toString(line));
+    }
+    
+    public static int[] makeTriangle(int n){
+        //determines first set of values in the array
+        switch (n) {
+            case 0:
+                return new int[]{1};
+            case 1:
+                return new int[]{1, 1};
+            default:
+                //for the rest of the values call back and adjust the next line
+                int[] previousLine = makeTriangle(n - 1);
+                int[] currentLine = new int[n + 1];
+                currentLine[0] = 1;
+                currentLine[n] = 1;
+                for (int i = 1; i < n; i++) {
+                    currentLine[i] = previousLine[i - 1] + previousLine[i];
+                }
+                //returns the line of the array
+                return currentLine;
+        }
+    }    
+}
