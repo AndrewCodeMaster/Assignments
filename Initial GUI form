@@ -1,0 +1,134 @@
+package bankaccountgui;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class BankAccountGUI extends JFrame {
+    private BankAccount account;  // The BankAccount instance
+    private JLabel balanceLabel;  // Label to display the current balance
+    private JTextField amountField;  // Text field for user to input amount
+    private JButton depositButton;  // Button to deposit money
+    private JButton withdrawButton;  // Button to withdraw money
+
+    // Constructor sets up the GUI
+    public BankAccountGUI() {
+        account = new BankAccount();  // Create a new BankAccount
+
+        // Set up the main window
+        setTitle("Bank Account Management");
+        setSize(400, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        // Initialize and add components to the window
+        initComponents();
+        setVisible(true);  // Make the window visible
+    }
+
+    // Method to initialize and add components to the window
+    private void initComponents() {
+        // Label to display the current balance, initially $0.0
+        balanceLabel = new JLabel("Current Balance: $" + account.getBalance());
+        balanceLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Text field for user to input amount
+        amountField = new JTextField();
+        amountField.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Button to deposit money
+        depositButton = new JButton("Deposit");
+        // Button to withdraw money
+        withdrawButton = new JButton("Withdraw");
+
+        // Action listener for deposit button
+        depositButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Parse the input amount and deposit it
+                    double amount = Double.parseDouble(amountField.getText());
+                    account.deposit(amount);
+                    // Update the balance display
+                    updateBalance();
+                    // Clear the input field
+                    amountField.setText("");
+                } catch (NumberFormatException ex) {
+                    // Show an error message if the input is not a valid number
+                    JOptionPane.showMessageDialog(BankAccountGUI.this, "Please enter a valid amount.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        // Action listener for withdraw button
+        withdrawButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Parse the input amount and withdraw it
+                    double amount = Double.parseDouble(amountField.getText());
+                    account.withdraw(amount);
+                    // Update the balance display
+                    updateBalance();
+                    // Clear the input field
+                    amountField.setText("");
+                } catch (NumberFormatException ex) {
+                    // Show an error message if the input is not a valid number
+                    JOptionPane.showMessageDialog(BankAccountGUI.this, "Please enter a valid amount.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        // Panel to hold input components and buttons
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(2, 2));
+        inputPanel.add(new JLabel("Amount:"));  // Label for the amount input
+        inputPanel.add(amountField);  // Text field for the amount input
+        inputPanel.add(depositButton);  // Deposit button
+        inputPanel.add(withdrawButton);  // Withdraw button
+
+        // Add components to the main window
+        add(balanceLabel, BorderLayout.NORTH);  // Add balance label to the top
+        add(inputPanel, BorderLayout.CENTER);  // Add input panel to the center
+    }
+
+    // Method to update the balance display
+    private void updateBalance() {
+        balanceLabel.setText("Current Balance: $" + account.getBalance());
+    }
+
+    // Main method to launch the GUI
+    public static void main(String[] args) {
+        // Run the GUI on the event dispatch thread
+        SwingUtilities.invokeLater(BankAccountGUI::new);
+    }
+}
+
+class BankAccount {
+    private double balance;
+
+    // Constructor initializes the balance to 0.0
+    public BankAccount() {
+        balance = 0.0;
+    }
+
+    // Returns the current balance
+    public double getBalance() {
+        return balance;
+    }
+
+    // Deposits the specified amount into the account, if the amount is positive
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+
+    // Withdraws the specified amount from the account, if the amount is positive and less than or equal to the balance
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+        }
+    }
+}
