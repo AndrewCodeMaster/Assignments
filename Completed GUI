@@ -1,0 +1,233 @@
+package bankaccountgui;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class BankAccountGUI extends JFrame {
+    private BankAccount account;  // The BankAccount instance
+    private JLabel balanceLabel;  // Label to display the current balance
+    private JTextField amountField;  // Text field for user to input amount
+    private JButton depositButton;  // Button to deposit money
+    private JButton withdrawButton;  // Button to withdraw money
+    private JButton transactionLogButton;  // Button to view transaction log
+    private JButton saveButton;  // Button to save data to CSV
+    private JButton loadButton;  // Button to load data from CSV
+
+    // Constructor sets up the GUI
+    public BankAccountGUI() {
+        account = new BankAccount();  // Create a new BankAccount
+
+        // Set up the main window
+        setTitle("Bank Account Management");
+        setSize(400, 250);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        // Initialize and add components to the window
+        initComponents();
+        setVisible(true);  // Make the window visible
+    }
+
+    // Method to initialize and add components to the window
+    private void initComponents() {
+        // Label to display the current balance, initially $0.0
+        balanceLabel = new JLabel("Current Balance: $" + account.getBalance());
+        balanceLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Text field for user to input amount
+        amountField = new JTextField();
+        amountField.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Button to deposit money
+        depositButton = new JButton("Deposit");
+        // Button to withdraw money
+        withdrawButton = new JButton("Withdraw");
+        // Button to view transaction log
+        transactionLogButton = new JButton("Transaction Log");
+        // Button to save data to CSV
+        saveButton = new JButton("Save to CSV");
+        // Button to load data from CSV
+        loadButton = new JButton("Load from CSV");
+
+        // Action listener for deposit button
+        depositButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Parse the input amount and deposit it
+                    double amount = Double.parseDouble(amountField.getText());
+                    account.deposit(amount);
+                    // Update the balance display
+                    updateBalance();
+                    // Clear the input field
+                    amountField.setText("");
+                } catch (NumberFormatException ex) {
+                    // Show an error message if the input is not a valid number
+                    JOptionPane.showMessageDialog(BankAccountGUI.this, "Please enter a valid amount.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        // Action listener for withdraw button
+        withdrawButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Parse the input amount and withdraw it
+                    double amount = Double.parseDouble(amountField.getText());
+                    account.withdraw(amount);
+                    // Update the balance display
+                    updateBalance();
+                    // Clear the input field
+                    amountField.setText("");
+                } catch (NumberFormatException ex) {
+                    // Show an error message if the input is not a valid number
+                    JOptionPane.showMessageDialog(BankAccountGUI.this, "Please enter a valid amount.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        // Action listener for transaction log button
+        transactionLogButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Show the transaction log in a dialog
+                showTransactionLog();
+            }
+        });
+
+        // Action listener for save button
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    account.saveToCSV("bank_account.csv");  // Save data to CSV file
+                    JOptionPane.showMessageDialog(BankAccountGUI.this, "Data saved to bank_account.csv", "Save Successful", JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(BankAccountGUI.this, "Error saving data to CSV file.", "Save Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        // Action listener for load button
+        loadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    account.loadFromCSV("bank_account.csv");  // Load data from CSV file
+                    updateBalance();  // Update the balance display
+                    JOptionPane.showMessageDialog(BankAccountGUI.this, "Data loaded from bank_account.csv", "Load Successful", JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(BankAccountGUI.this, "Error loading data from CSV file.", "Load Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        // Panel to hold input components and buttons
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(4, 2));
+        inputPanel.add(new JLabel("Amount:"));  // Label for the amount input
+        inputPanel.add(amountField);  // Text field for the amount input
+        inputPanel.add(depositButton);  // Deposit button
+        inputPanel.add(withdrawButton);  // Withdraw button
+        inputPanel.add(transactionLogButton);  // Transaction log button
+        inputPanel.add(saveButton);  // Save to CSV button
+        inputPanel.add(loadButton);  // Load from CSV button
+
+        // Add components to the main window
+        add(balanceLabel, BorderLayout.NORTH);  // Add balance label to the top
+        add(inputPanel, BorderLayout.CENTER);  // Add input panel to the center
+    }
+
+    // Method to update the balance display
+    private void updateBalance() {
+        balanceLabel.setText("Current Balance: $" + account.getBalance());
+    }
+
+    // Method to show the transaction log in a dialog
+    private void showTransactionLog() {
+        List<String> transactions = account.getTransactionLog();
+        StringBuilder log = new StringBuilder();
+
+        // Build the log string from the list of transactions
+        for (String transaction : transactions) {
+            log.append(transaction).append("\n");
+        }
+
+        // Show the transaction log in a message dialog
+        JOptionPane.showMessageDialog(this, log.toString(), "Transaction Log", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    // Main method to launch the GUI
+    public static void main(String[] args) {
+        // Run the GUI on the event dispatch thread
+        SwingUtilities.invokeLater(BankAccountGUI::new);
+    }
+}
+
+class BankAccount {
+    private double balance;  // Stores the current balance of the bank account
+    private List<String> transactionLog;  // Stores the log of all transactions
+
+    // Constructor initializes the balance to 0.0 and sets up an empty transaction log
+    public BankAccount() {
+        balance = 0.0;
+        transactionLog = new ArrayList<>();
+    }
+
+    // Returns the current balance of the account
+    public double getBalance() {
+        return balance;
+    }
+
+    // Deposits the specified amount into the account if the amount is positive
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;  // Increase the balance by the deposit amount
+            transactionLog.add("Deposited: $" + amount);  // Add a log entry for the deposit
+        }
+    }
+
+    // Withdraws the specified amount from the account if the amount is positive and less than or equal to the current balance
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;  // Decrease the balance by the withdrawal amount
+            transactionLog.add("Withdrew: $" + amount);  // Add a log entry for the withdrawal
+        }
+    }
+
+    // Returns the transaction log as a list of strings
+    public List<String> getTransactionLog() {
+        return transactionLog;
+    }
+
+    // Saves the current balance and transaction log to a CSV file
+    public void saveToCSV(String filename) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(balance + "\n");  // Write the balance to the file
+            for (String transaction : transactionLog) {
+                writer.write(transaction + "\n");  // Write each transaction to the file
+            }
+        }
+    }
+
+    // Loads the balance and transaction log from a CSV file
+    public void loadFromCSV(String filename) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            balance = Double.parseDouble(reader.readLine());  // Read and set the balance
+            transactionLog.clear();  // Clear the existing transaction log
+            String line;
+            while ((line = reader.readLine()) != null) {
+                transactionLog.add(line);  // Read and add each transaction to the log
+            }
+        }
+    }
+}
+
